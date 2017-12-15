@@ -4,7 +4,7 @@
     "keywords": ["translation", "i18n"],
     "homepage": "http://www.izzle.org",
     "type": "library",
-    "license": "LGPL",
+    "license": "MIT",
     "authors": [
         {
             "name": "Izzle",
