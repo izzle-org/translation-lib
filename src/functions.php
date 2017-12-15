@@ -16,8 +16,8 @@ if (!function_exists('trans')) {
 }
 
 if (!function_exists('trans_load')) {
-    function trans_load($json_file)
+    function trans_load($json_file, $prefix = '')
     {
-        Translation::load($json_file);
+        Translation::load($json_file, $prefix);
     }
 }
