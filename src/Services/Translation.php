@@ -2,6 +2,7 @@
 
 namespace Izzle\Translation\Services;
 
+use Izzle\Translation\ParameterEnclosure;
 use Noodlehaus\Config;
 
 class Translation
@@ -12,16 +13,21 @@ class Translation
     protected static $isBooted = false;
     
     /**
+     * @var ParameterEnclosure
+     */
+    protected static $enclosure;
+    
+    /**
      * @var Config
      */
     protected static $config;
     
     /**
      * @param string $key
-     * @param mixed $detault
+     * @param array $parameters
      * @throws \Exception
      */
-    public static function translate($key, $default = null)
+    public static function translate($key, array $parameters = [])
     {
         if (!self::$isBooted) {
             self::boot();
@@ -31,34 +37,34 @@ class Translation
             throw new \Exception('No data is loaded. Please use the load method');
         }
         
-        return self::$config->get($key, $default);
+        $value = self::$config->get($key, $key);
+        
+        // Translation parameters
+        foreach ($parameters as $parameter) {
+            if (!is_array($parameter)) {
+                continue;
+            }
+            
+            foreach ($parameter as $k => $v) {
+                $value = str_replace(sprintf(self::$enclosure->getEnclosure(), $k), $v, $value);
+            }
+        }
+        
+        return $value;
     }
     
     /**
      * @param string $json_file
+     * @param ParameterEnclosure $enclosure
      */
-    public static function load($json_file)
+    public static function load($json_file, ParameterEnclosure $enclosure)
     {
         if (!file_exists($json_file)) {
             throw new \InvalidArgumentException(sprintf('File (%s) does not exists', $json_file));
         }
         
-        /*
-        if (($json = file_get_contents($json_file)) === false) {
-            throw new \InvalidArgumentException(sprintf('Error while reading file (%s)', $json_file));
-        }
-        
-        $data = json_decode($json);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \InvalidArgumentException(sprintf('JSON parsing error occured (%s)', json_last_error_msg()));
-        }
-        
-        if (!($data instanceof \stdClass)) {
-            throw new \InvalidArgumentException('Root JSON data must be an object');
-        }
-        */
-        
         self::$config = new Config($json_file);
+        self::$enclosure = $enclosure;
     }
     
     protected static function boot()
