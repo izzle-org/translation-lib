@@ -35,20 +35,14 @@ class Translation
     
         $key = !empty(self::$prefix) ? sprintf('%s.%s', self::$prefix, $key) : $key;
         
-        $value = self::$config->get($key, $key);
+        $translation = self::$config->get($key, $key);
         
         // Translation parameters
-        foreach ($parameters as $parameter) {
-            if (!is_array($parameter)) {
-                continue;
-            }
-            
-            foreach ($parameter as $k => $v) {
-                $value = str_replace(sprintf(self::$enclosure->getEnclosure(), $k), $v, $value);
-            }
+        foreach ($parameters as $parameter => $value) {
+            $translation = str_replace(sprintf(self::$enclosure->getEnclosure(), $parameter), $value, $translation);
         }
         
-        return $value;
+        return $translation;
     }
     
     /**
