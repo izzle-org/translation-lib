@@ -2,15 +2,17 @@
 
 namespace Izzle\Translation\Services;
 
+use Exception;
+use InvalidArgumentException;
 use Noodlehaus\Config;
+use Noodlehaus\Exception\EmptyDirectoryException;
 
+/**
+ * Class Translation
+ * @package Izzle\Translation\Services
+ */
 class Translation
 {
-    /**
-     * @var bool
-     */
-    protected static $isBooted = false;
-    
     /**
      * @var Config
      */
@@ -18,51 +20,29 @@ class Translation
     
     /**
      * @param string $key
-     * @param mixed $detault
-     * @throws \Exception
+     * @return mixed|null
+     * @throws Exception
      */
-    public static function translate($key, $default = null)
+    public static function translate($key)
     {
-        if (!self::$isBooted) {
-            self::boot();
+        if (self::$config === null) {
+            throw new Exception('No data is loaded. Please use the load method first');
         }
         
-        if (is_null(self::$config)) {
-            throw new \Exception('No data is loaded. Please use the load method');
-        }
-        
-        return self::$config->get($key, $default);
+        return self::$config->get($key, $key);
     }
     
     /**
-     * @param string $json_file
+     * @param string $jsonFile
+     * @param string $node
+     * @throws EmptyDirectoryException
      */
-    public static function load($json_file)
+    public static function load($jsonFile, $node = null)
     {
-        if (!file_exists($json_file)) {
-            throw new \InvalidArgumentException(sprintf('File (%s) does not exists', $json_file));
+        if (!file_exists($jsonFile)) {
+            throw new InvalidArgumentException(sprintf('File (%s) does not exists', $jsonFile));
         }
-        
-        /*
-        if (($json = file_get_contents($json_file)) === false) {
-            throw new \InvalidArgumentException(sprintf('Error while reading file (%s)', $json_file));
-        }
-        
-        $data = json_decode($json);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \InvalidArgumentException(sprintf('JSON parsing error occured (%s)', json_last_error_msg()));
-        }
-        
-        if (!($data instanceof \stdClass)) {
-            throw new \InvalidArgumentException('Root JSON data must be an object');
-        }
-        */
-        
-        self::$config = new Config($json_file);
-    }
-    
-    protected static function boot()
-    {
-        self::$isBooted = (require_once (__DIR__ . '/../bootstrap.php'));
+
+        self::$config = new Config($jsonFile);
     }
 }
