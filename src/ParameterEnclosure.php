@@ -2,6 +2,8 @@
 
 namespace Izzle\Translation;
 
+use InvalidArgumentException;
+
 /**
  * Class ParameterEnclosure
  * @package Izzle\Translation
@@ -26,7 +28,7 @@ class ParameterEnclosure
     
     /**
      * @param string $enclosure
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return ParameterEnclosure
      */
     public function setEnclosure($enclosure)
@@ -37,7 +39,7 @@ class ParameterEnclosure
                 $this->enclosure = $enclosure;
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf('Enclosure type %s not supported', $enclosure));
+                throw new InvalidArgumentException(sprintf('Enclosure type %s not supported', $enclosure));
         }
         
         return $this;

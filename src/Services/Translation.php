@@ -2,8 +2,11 @@
 
 namespace Izzle\Translation\Services;
 
+use Exception;
+use InvalidArgumentException;
 use Izzle\Translation\ParameterEnclosure;
 use Noodlehaus\Config;
+use Noodlehaus\Exception\EmptyDirectoryException;
 
 class Translation
 {
@@ -25,12 +28,13 @@ class Translation
     /**
      * @param string $key
      * @param array $parameters
-     * @throws \Exception
+     * @return mixed|string|string[]|null
+     * @throws Exception
      */
     public static function translate($key, array $parameters = [])
     {
-        if (is_null(self::$config)) {
-            throw new \Exception('No data is loaded. Please use the load method');
+        if (self::$config === null) {
+            throw new Exception('No data is loaded. Please use the load method');
         }
     
         $key = !empty(self::$prefix) ? sprintf('%s.%s', self::$prefix, $key) : $key;
@@ -46,18 +50,23 @@ class Translation
     }
     
     /**
-     * @param string $json_file
-     * @param ParameterEnclosure $enclosure
+     * @param string $jsonFile
+     * @param ParameterEnclosure|null $enclosure
      * @param string $prefix
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
+     * @throws EmptyDirectoryException
      */
-    public static function load($json_file, ParameterEnclosure $enclosure, $prefix = '')
+    public static function load($jsonFile, ParameterEnclosure $enclosure = null, $prefix = '')
     {
-        if (!file_exists($json_file)) {
-            throw new \InvalidArgumentException(sprintf('File (%s) does not exists', $json_file));
+        if (!file_exists($jsonFile)) {
+            throw new InvalidArgumentException(sprintf('File (%s) does not exists', $jsonFile));
         }
         
-        self::$config = new Config($json_file);
+        if ($enclosure === null) {
+            $enclosure = new ParameterEnclosure();
+        }
+        
+        self::$config = new Config($jsonFile);
         self::$prefix = $prefix;
         self::$enclosure = $enclosure;
     }
