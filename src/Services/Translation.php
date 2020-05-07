@@ -36,7 +36,7 @@ class Translation
         if (self::$config === null) {
             throw new Exception('No data is loaded. Please use the load method');
         }
-        
+    
         $key = !empty(self::$prefix) ? sprintf('%s.%s', self::$prefix, $key) : $key;
         
         $translation = self::$config->get($key, $key);
