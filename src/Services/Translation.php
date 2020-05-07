@@ -4,13 +4,10 @@ namespace Izzle\Translation\Services;
 
 use Exception;
 use InvalidArgumentException;
+use Izzle\Translation\ParameterEnclosure;
 use Noodlehaus\Config;
 use Noodlehaus\Exception\EmptyDirectoryException;
 
-/**
- * Class Translation
- * @package Izzle\Translation\Services
- */
 class Translation
 {
     /**
@@ -19,30 +16,58 @@ class Translation
     protected static $config;
     
     /**
+     * @var ParameterEnclosure
+     */
+    protected static $enclosure;
+    
+    /**
+     * @var string
+     */
+    protected static $prefix = '';
+    
+    /**
      * @param string $key
-     * @return mixed|null
+     * @param array $parameters
+     * @return mixed|string|string[]|null
      * @throws Exception
      */
-    public static function translate($key)
+    public static function translate($key, array $parameters = [])
     {
         if (self::$config === null) {
-            throw new Exception('No data is loaded. Please use the load method first');
+            throw new Exception('No data is loaded. Please use the load method');
         }
         
-        return self::$config->get($key, $key);
+        $key = !empty(self::$prefix) ? sprintf('%s.%s', self::$prefix, $key) : $key;
+        
+        $translation = self::$config->get($key, $key);
+        
+        // Translation parameters
+        foreach ($parameters as $parameter => $value) {
+            $translation = str_replace(sprintf(self::$enclosure->getEnclosure(), $parameter), $value, $translation);
+        }
+        
+        return $translation;
     }
     
     /**
      * @param string $jsonFile
-     * @param string $node
+     * @param ParameterEnclosure|null $enclosure
+     * @param string $prefix
+     * @throws InvalidArgumentException
      * @throws EmptyDirectoryException
      */
-    public static function load($jsonFile, $node = null)
+    public static function load($jsonFile, ParameterEnclosure $enclosure = null, $prefix = '')
     {
         if (!file_exists($jsonFile)) {
             throw new InvalidArgumentException(sprintf('File (%s) does not exists', $jsonFile));
         }
-
+        
+        if ($enclosure === null) {
+            $enclosure = new ParameterEnclosure();
+        }
+        
         self::$config = new Config($jsonFile);
+        self::$prefix = $prefix;
+        self::$enclosure = $enclosure;
     }
 }
