@@ -1,0 +1,19 @@
+{
+    "de_DE":{
+        "global":{
+            "save": "Speichern",
+            "hello": "Hallo {0}"
+        }
+    },
+
+    "global":{
+        "save": "Speichern",
+        "hello": "Hallo {0}",
+        "temperature": ":0: :1 °C"
+    },
+
+    "product": {
+        "name": "Name",
+        "sku": "Artikelnummer"
+    }
+}

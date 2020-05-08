@@ -16,7 +16,17 @@ class ParameterEnclosure
     /**
      * @var string
      */
-    protected $enclosure = '';
+    protected $enclosure = self::ENCLOSURE_BRACER;
+    
+    /**
+     * ParameterEnclosure constructor.
+     * @param string $enclosure
+     * @throws InvalidArgumentException
+     */
+    public function __construct($enclosure = self::ENCLOSURE_BRACER)
+    {
+        $this->setEnclosure($enclosure);
+    }
     
     /**
      * @return string

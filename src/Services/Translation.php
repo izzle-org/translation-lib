@@ -70,4 +70,20 @@ class Translation
         self::$prefix = $prefix;
         self::$enclosure = $enclosure;
     }
+    
+    /**
+     * @param ParameterEnclosure $enclosure
+     */
+    public static function setEnclosure(ParameterEnclosure $enclosure)
+    {
+        self::$enclosure = $enclosure;
+    }
+    
+    /**
+     * @param string $prefix
+     */
+    public static function setPrefix($prefix)
+    {
+        self::$prefix = $prefix;
+    }
 }
