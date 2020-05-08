@@ -1,3 +1,7 @@
+0.1.2
+-----
+- Addded readme file
+
 0.1.1
 -----
 - Added phpunit tests
