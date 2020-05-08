@@ -1,3 +1,7 @@
+0.2.0 (unreleased)
+-----
+- Added phpunit tests
+
 0.1.0
 -----
 - Added replacing parameters in translation strings

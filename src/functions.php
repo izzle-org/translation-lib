@@ -2,6 +2,7 @@
 
 use Izzle\Translation\ParameterEnclosure;
 use Izzle\Translation\Services\Translation;
+use Noodlehaus\Exception\EmptyDirectoryException;
 
 if (!function_exists('trans')) {
     /**
@@ -17,8 +18,14 @@ if (!function_exists('trans')) {
 }
 
 if (!function_exists('trans_load')) {
-    function trans_load($json_file, ParameterEnclosure $enclosure, $prefix = '')
+    /**
+     * @param $jsonFile
+     * @param ParameterEnclosure|null $enclosure
+     * @param string $prefix
+     * @throws EmptyDirectoryException
+     */
+    function trans_load($jsonFile, ParameterEnclosure $enclosure = null, $prefix = '')
     {
-        Translation::load($json_file, $enclosure, $prefix);
+        Translation::load($jsonFile, $enclosure, $prefix);
     }
 }
