@@ -1,3 +1,8 @@
+0.2.0
+-----
+- Push to PHP Version >= 7.1
+- Changed Translator from static to instance
+
 0.1.2
 -----
 - Addded readme file

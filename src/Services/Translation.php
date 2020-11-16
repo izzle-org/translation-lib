@@ -13,17 +13,29 @@ class Translation
     /**
      * @var Config
      */
-    protected static $config;
+    protected $config;
     
     /**
      * @var ParameterEnclosure
      */
-    protected static $enclosure;
+    protected $enclosure;
     
     /**
      * @var string
      */
-    protected static $prefix = '';
+    protected $prefix = '';
+    
+    /**
+     * Translation constructor.
+     * @param string $jsonFile
+     * @param ParameterEnclosure|null $enclosure
+     * @param string $prefix
+     * @throws EmptyDirectoryException
+     */
+    public function __construct(string $jsonFile, ParameterEnclosure $enclosure = null, string $prefix = '')
+    {
+        $this->load($jsonFile, $enclosure, $prefix);
+    }
     
     /**
      * @param string $key
@@ -31,19 +43,19 @@ class Translation
      * @return mixed|string|string[]|null
      * @throws Exception
      */
-    public static function translate($key, array $parameters = [])
+    public function translate(string $key, array $parameters = [])
     {
-        if (self::$config === null) {
+        if ($this->config === null) {
             throw new Exception('No data is loaded. Please use the load method');
         }
     
-        $key = !empty(self::$prefix) ? sprintf('%s.%s', self::$prefix, $key) : $key;
+        $key = !empty($this->prefix) ? sprintf('%s.%s', $this->prefix, $key) : $key;
         
-        $translation = self::$config->get($key, $key);
+        $translation = $this->config->get($key, $key);
         
         // Translation parameters
         foreach ($parameters as $parameter => $value) {
-            $translation = str_replace(sprintf(self::$enclosure->getEnclosure(), $parameter), $value, $translation);
+            $translation = str_replace(sprintf($this->enclosure->getEnclosure(), $parameter), $value, $translation);
         }
         
         return $translation;
@@ -56,7 +68,7 @@ class Translation
      * @throws InvalidArgumentException
      * @throws EmptyDirectoryException
      */
-    public static function load($jsonFile, ParameterEnclosure $enclosure = null, $prefix = '')
+    public function load(string $jsonFile, ParameterEnclosure $enclosure = null, string $prefix = ''): void
     {
         if (!file_exists($jsonFile)) {
             throw new InvalidArgumentException(sprintf('File (%s) does not exists', $jsonFile));
@@ -66,24 +78,28 @@ class Translation
             $enclosure = new ParameterEnclosure();
         }
         
-        self::$config = new Config($jsonFile);
-        self::$prefix = $prefix;
-        self::$enclosure = $enclosure;
+        $this->config = new Config($jsonFile);
+        $this->prefix = $prefix;
+        $this->enclosure = $enclosure;
     }
     
     /**
      * @param ParameterEnclosure $enclosure
+     * @return self
      */
-    public static function setEnclosure(ParameterEnclosure $enclosure)
+    public function setEnclosure(ParameterEnclosure $enclosure): self
     {
-        self::$enclosure = $enclosure;
+        $this->enclosure = $enclosure;
+        return $this;
     }
     
     /**
      * @param string $prefix
+     * @return self
      */
-    public static function setPrefix($prefix)
+    public function setPrefix(string $prefix): self
     {
-        self::$prefix = $prefix;
+        $this->prefix = $prefix;
+        return $this;
     }
 }
