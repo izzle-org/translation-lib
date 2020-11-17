@@ -4,10 +4,15 @@ namespace Izzle\Translation\Services;
 
 use Exception;
 use InvalidArgumentException;
+use Izzle\Translation\Exceptions\TranslationException;
 use Izzle\Translation\ParameterEnclosure;
 use Noodlehaus\Config;
 use Noodlehaus\Exception\EmptyDirectoryException;
 
+/**
+ * Class Translation
+ * @package Izzle\Translation\Services
+ */
 class Translation
 {
     /**
@@ -41,12 +46,12 @@ class Translation
      * @param string $key
      * @param array $parameters
      * @return mixed|string|string[]|null
-     * @throws Exception
+     * @throws TranslationException
      */
     public function translate(string $key, array $parameters = [])
     {
         if ($this->config === null) {
-            throw new Exception('No data is loaded. Please use the load method');
+            throw new TranslationException('No data is loaded. Please use the load method');
         }
     
         $key = !empty($this->prefix) ? sprintf('%s.%s', $this->prefix, $key) : $key;

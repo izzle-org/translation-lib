@@ -3,6 +3,7 @@
 namespace Izzle\Translation\Test\Services;
 
 use InvalidArgumentException;
+use Izzle\Translation\Exceptions\TranslationException;
 use Izzle\Translation\ParameterEnclosure;
 use Izzle\Translation\Services\Translation;
 use PHPUnit\Framework\TestCase;

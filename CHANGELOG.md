@@ -1,3 +1,7 @@
+0.2.1 (unreleased)
+-----
+- Removed helper functions
+
 0.2.0
 -----
 - Push to PHP Version >= 7.1
