@@ -1,6 +1,7 @@
-0.2.1 (unreleased)
+0.2.1
 -----
 - Removed helper functions
+- Pushed to new major config lib
 
 0.2.0
 -----
