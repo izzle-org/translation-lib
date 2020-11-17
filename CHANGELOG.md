@@ -1,3 +1,8 @@
+0.2.1
+-----
+- Removed helper functions
+- Pushed to new major config lib
+
 0.2.0
 -----
 - Push to PHP Version >= 7.1
