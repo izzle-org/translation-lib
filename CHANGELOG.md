@@ -1,3 +1,7 @@
+0.3.0
+-----
+- Added PHP 8 Support
+
 0.2.1
 -----
 - Removed helper functions
