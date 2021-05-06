@@ -1,3 +1,7 @@
+0.3.1
+-----
+- Fixed Readme Howtos
+
 0.3.0
 -----
 - Added PHP 8 Support
